@@ -13,12 +13,28 @@
 <body>
 <a class="github-fork-ribbon" href="https://github.com/polchky/gcode-customizer" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 
-<form id="upload">
-    <label for="file">File to upload</label>
-    <input type="file" id="file" accept=".gcode, .ngc">
+<div class="container">
+    <form id="upload">
+        <div class="row">
+            <div class="col-6 form-group">
+                <label for="plungeGcode">Plunge Gcode</label>
+                <textarea id="plungeGcode" class="form-control"></textarea>
+            </div>
+            <div class="col-6 form-group">
+                <label for="retractGcode">Retract Gcode</label>
+                <textarea id="retractGcode" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 form-group">
+                <label for="gcodeFile">File to upload</label>
+                <input class=form-control-file" type="file" id="gcodeFile" accept=".gcode, .ngc">
+            </div>
+        </div>
 
-    <button>Upload</button>
-</form>
+        <button>Upload</button>
+    </form>
+</div>
 
 <script src="script.js"></script>
 </body>

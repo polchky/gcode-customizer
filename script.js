@@ -1,14 +1,6 @@
 // Get the form and file field
 let form = document.querySelector('#upload');
-let file = document.querySelector('#file');
-
-function writePlunge(lines) {
-    lines.push('plunging');
-}
-
-function writeRetract(lines) {
-    lines.push('retracting');
-}
+let file = document.querySelector('#gcodeFile');
 
 function getReplacedFileName(oldName) {
     let parts = oldName.split('.');
@@ -21,12 +13,15 @@ function getReplacedFileName(oldName) {
  * @param {event} Event The file loaded event
  */
 function logFile (event, fileName) {
+    let plungeGcodeLines = document.querySelector('#plungeGcode').value.split('\n');
+    let retractGcodeLines = document.querySelector('#retractGcode').value.split('\n');
     let str = event.target.result;
     let isInPath = false;
     let changedLines = [];
-    for (line of str.split('\n')) {
-
-        changedLines.push(line);
+    let originalLines = str.split('\n');
+    for (let lineIndex = 0; lineIndex < originalLines.length; lineIndex++) {
+        let skipLine = false;
+        let line = originalLines[lineIndex];
 
         if (line.startsWith('; Operation: ')) {
             isInPath = false;
@@ -36,12 +31,21 @@ function logFile (event, fileName) {
             isInPath = true;
         }
 
-        if (isInPath && line.startsWith('; plunge')) {
-            writePlunge(changedLines);
+        if (!isInPath && line.startsWith('; Retract')) {
+            lineIndex += 1;
+            continue;
         }
 
-        if (isInPath && line.startsWith('; Retract')) {
-            writeRetract(changedLines);
+        changedLines.push(line);
+
+        if (line.startsWith('; plunge')) {
+            changedLines.push(...plungeGcodeLines);
+            lineIndex += 1;
+        }
+
+        if (line.startsWith('; Retract')) {
+            changedLines.push(...retractGcodeLines);
+            lineIndex += 1;
         }
     }
 
